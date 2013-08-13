@@ -733,16 +733,16 @@ public class WorldGuardPlugin extends JavaPlugin {
             return;
         }
 
-        InputStream input =
-                    null;
-            try {
-                JarFile file = new JarFile(getFile());
-                ZipEntry copy = file.getEntry("defaults/" + defaultName);
-                if (copy == null) throw new FileNotFoundException();
-                input = file.getInputStream(copy);
-            } catch (IOException e) {
-                getLogger().severe("Unable to read default configuration: " + defaultName);
-            }
+        InputStream input = null;
+        JarFile file = null;
+        try {
+            file = new JarFile(getFile());
+            ZipEntry copy = file.getEntry("defaults/" + defaultName);
+            if (copy == null) throw new FileNotFoundException();
+            input = file.getInputStream(copy);
+        } catch (IOException e) {
+            getLogger().severe("Unable to read default configuration: " + defaultName);
+        }
 
         if (input != null) {
             FileOutputStream output = null;

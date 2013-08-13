@@ -268,6 +268,8 @@ public class WorldGuardEntityListener implements Listener {
                     case ENTITY_EXPLOSION:
                         event.setCancelled(true);
                         return;
+                    default:
+                    	break;
                 }
             }
 
@@ -811,6 +813,8 @@ public class WorldGuardEntityListener implements Listener {
             case ENDER_DRAGON:
                 if (wcfg.blockEnderDragonPortalCreation) event.setCancelled(true);
                 break;
+            default:
+            	break;
         }
     }
 

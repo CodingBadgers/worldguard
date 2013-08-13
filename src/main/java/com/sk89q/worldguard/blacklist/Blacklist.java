@@ -241,7 +241,8 @@ public abstract class Blacklist {
                             + file.getName() + " for '" + line + "'");
                 }
             }
-
+            
+            buff.close();
             this.blacklist = blacklist;
         } finally {
             try {
