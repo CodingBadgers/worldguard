@@ -158,41 +158,43 @@ public class ProtectedPolygonalRegion extends ProtectedRegion {
 
     @Override
     public int volume() {
-        int volume = 0;
-        // TODO: Fix this
-        /*int numPoints = points.size();
-        if (numPoints < 3) {
-            return 0;
-        }
-
-        double area = 0;
-        int xa, z1, z2;
-
-        for (int i = 0; i < numPoints; i++) {
-            xa = points.get(i).getBlockX();
-            //za = points.get(i).getBlockZ();
-
-            if (points.get(i + 1) == null) {
-                z1 = points.get(0).getBlockZ();
-            } else {
-                z1 = points.get(i + 1).getBlockZ();
-            }
-            if (points.get(i - 1) == null) {
-                z2 = points.get(numPoints - 1).getBlockZ();
-            } else {
-                z2 = points.get(i - 1).getBlockZ();
-            }
-
-            area = area + (xa * (z1 - z2));
-        }
-
-        xa = points.get(0).getBlockX();
-        //za = points.get(0).getBlockZ();
-
-        area = area + (xa * (points.get(1).getBlockZ() - points.get(numPoints - 1).getBlockZ()));
-
-        volume = (Math.abs(maxY - minY) + 1) * (int) Math.ceil((Math.abs(area) / 2));*/
-
-        return volume;
+        
+    	// volume of an n sided irregular polygon is a little weird.
+    	// However, for the majority of cases we can use the area of the polygon
+    	// multiplied by the height (ymax - ymin) of the polygon region.
+     	
+    	// Area of a polygon equation
+    	//
+    	// (x1z2 - z1x2) + (x2z3 - z2x3) + (x(n)z(n+1) - z(n)x(n+1))
+    	// ----------------------------------------------------------
+    	//                           2
+    	//
+    	
+    	final int noofPoints = this.points.size();
+    	
+    	// We need at least 3 points to calculate a polygons area
+    	if (noofPoints < 3) {
+    		return 0;
+    	}
+    	
+    	float numerator = 0.0f;   	
+    	for (int n = 0; n < noofPoints; ++n) {
+    		final int m = n < noofPoints - 1 ? n + 1 : 0;
+    		
+    		BlockVector2D point1 = this.points.get(n);
+    		BlockVector2D point2 = this.points.get(m);
+    		
+    		// (x(n)z(n+1) - z(n)x(n+1))
+    		numerator += ((point1.getX() * point2.getZ()) - (point1.getZ() * point2.getX()));
+    	}
+    	
+    	final float area = numerator * 0.5f;
+    	
+    	// Just get the height of the region, this isn't correct, but gives a good estimate
+    	final float height = this.maxY - this.minY;
+    	final float volume = area * height;    	
+    	
+    	// Estimated polygon volume
+        return (int)volume;
     }
 }
